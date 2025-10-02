@@ -63,6 +63,15 @@ class BoardController: NSObject,
   private func applyNumLettersSettings(with settings: [String: Any]) {
     // START YOUR CODE HERE
     // ...
+      guard let newNumLetters = settings[kNumLettersKey] as? Int else { return }
+      numItemsPerRow = newNumLetters
+      let rawTheme = settings[kWordThemeKey] as? String ?? WordTheme.normal.rawValue
+      let theme = WordTheme(rawValue: rawTheme) ?? .normal
+      goalWord = WordGenerator.generateGoalWord(with: theme)
+      
+      numTimesGuessed = 0
+      collectionView.collectionViewLayout.invalidateLayout()
+      collectionView.reloadData()
     // END YOUR CODE HERE
   }
   
@@ -74,6 +83,11 @@ class BoardController: NSObject,
   // Checkpoint: Correctly implementing this should allow you to change the number of rows in the board!
   private func applyNumGuessesSettings(with settings: [String: Any]) {
     // START YOUR CODE HERE
+      guard let newNumGuesses = settings[kNumGuessesKey] as? Int else { return }
+      numRows = newNumGuesses
+      numTimesGuessed = 0
+      collectionView.collectionViewLayout.invalidateLayout()
+      collectionView.reloadData()
     // ...
     // END YOUR CODE HERE
   }
@@ -88,7 +102,14 @@ class BoardController: NSObject,
   private func applyThemeSettings(with settings: [String: Any]) {
     // START YOUR CODE HERE
     // ...
-    // END YOUR CODE HERE
+      if let rawTheme = settings[kWordThemeKey] as? String,
+      let theme = WordTheme(rawValue: rawTheme) {
+             goalWord = WordGenerator.generateGoalWord(with: theme)
+         }
+      
+      numTimesGuessed = 0
+      collectionView.collectionViewLayout.invalidateLayout()
+      collectionView.reloadData()    // END YOUR CODE HERE
   }
   
   // Exercise 4: Implement applyIsAlienWordleSettings to change the goal word after each guess
@@ -98,6 +119,9 @@ class BoardController: NSObject,
   private func applyIsAlienWordleSettings(with settings: [String: Any]) {
     // START YOUR CODE HERE
     // ...
+      if let isAlien = settings[kIsAlienWordleKey] as? Bool {
+          isAlienWordle = isAlien
+      }
     // START YOUR CODE HERE
   }
 }
